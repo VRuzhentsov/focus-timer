@@ -1,7 +1,7 @@
 {
-  "name": "electron-vue-template",
+  "name": "focus-timer",
   "version": "0.1.0",
-  "description": "A minimal Electron + Vue application",
+  "description": "A simple focus timer app",
   "main": "main/main.js",
   "scripts": {
     "dev": "node scripts/dev-server.js",
@@ -10,7 +10,7 @@
     "build:mac": "node scripts/build.js && electron-builder --mac",
     "build:linux": "node scripts/build.js && electron-builder --linux"
   },
-  "repository": "https://github.com/deluze/electron-vue-template",
+  "repository": "https://github.com/VRuzhentsov/focus-timer",
   "author": {
     "name": "Deluze",
     "url": "https://github.com/Deluze"

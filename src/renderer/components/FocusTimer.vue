@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import defaultAlarmSound from '../assets/default-alarm.mp3'
 import { ref, computed } from 'vue'
 
 const focusDuration = ref(25)
@@ -53,12 +54,15 @@ const stopTimer = () => {
   timeLeft.value = 0
 }
 
-const DEFAULT_ALARM = './default-alarm.mp3'
-const DEFAULT_ALARM_PATH = '../assets/' + DEFAULT_ALARM
-
 const playAlarm = () => {
-  const audio = new Audio(audioFile.value || DEFAULT_ALARM_PATH)
-  audio.play()
+  try {
+    const audio = new Audio(audioFile.value || defaultAlarmSound)
+    audio.play().catch(error => {
+      console.error('Error playing audio:', error)
+    })
+  } catch (error) {
+    console.error('Error creating Audio instance:', error)
+  }
 }
 
 const handleAudioFile = (event: Event) => {
