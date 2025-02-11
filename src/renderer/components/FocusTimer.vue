@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import defaultAlarmSound from '../assets/default-alarm.mp3'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 const focusDuration = ref(25)
 const restDuration = ref(5)
 const timeLeft = ref(0)
 const isRunning = ref(false)
 const isResting = ref(false)
-const timer = ref<number | null>(null)
 const audioFile = ref('')
 
 const displayTime = computed(() => {
@@ -16,42 +15,36 @@ const displayTime = computed(() => {
   return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 })
 
+onMounted(() => {
+  window.electronAPI.onTimerTick(({ timeLeft: newTime, isResting: newIsResting }) => {
+    timeLeft.value = newTime;
+    isResting.value = newIsResting;
+    isRunning.value = true;
+  });
+
+  window.electronAPI.onTimerComplete(() => {
+    playAlarm();
+    isRunning.value = false;
+    isResting.value = false;
+    timeLeft.value = 0;
+  });
+});
+
 const startTimer = () => {
   if (isRunning.value) return
-
-  isRunning.value = true
-  timeLeft.value = focusDuration.value * 60
-  timer.value = window.setInterval(() => {
-    timeLeft.value--
-    if (timeLeft.value <= 0) {
-      playAlarm()
-      stopTimer()
-    }
-  }, 1000)
+  window.electronAPI.startFocus(focusDuration.value);
 }
 
 const startRest = () => {
   if (isRunning.value) return
-
-  isRunning.value = true
-  isResting.value = true
-  timeLeft.value = 0
-  timer.value = window.setInterval(() => {
-    timeLeft.value++
-    if (timeLeft.value >= restDuration.value * 60) {
-      playAlarm()
-      stopTimer()
-    }
-  }, 1000)
+  window.electronAPI.startRest(restDuration.value);
 }
 
 const stopTimer = () => {
-  if (timer.value) {
-    clearInterval(timer.value)
-  }
-  isRunning.value = false
-  isResting.value = false
-  timeLeft.value = 0
+  window.electronAPI.stopTimer();
+  isRunning.value = false;
+  isResting.value = false;
+  timeLeft.value = 0;
 }
 
 const playAlarm = () => {

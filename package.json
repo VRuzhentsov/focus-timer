@@ -12,8 +12,8 @@
   },
   "repository": "https://github.com/VRuzhentsov/focus-timer",
   "author": {
-    "name": "Deluze",
-    "url": "https://github.com/Deluze"
+    "name": "VRuzhentsov",
+    "url": "https://github.com/VRuzhentsov"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.4.1",
